@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>hello word</title>
+    <script type="text/javascript" src="./js/jquery-3.1.0.js">
+
+    </script>
+  </head>
+  <body>
+      <h2>hello index</h2>
+      <script type="text/javascript">
+        // var array = ['a','b','c'];
+        // var obj = {test:'12',value:'2222'};
+        // array.reduce((_obj,arr)=>{
+        //   _obj[arr] = obj;
+        //   _obj['value']="";
+        //   obj = _obj;
+        //   console.log(obj,'2222');
+        //   return {};
+        // },{});
+        var array = ['a','b','c'];
+        array.reduce((_obj,arr)=>{
+          var obj = {};
+          obj[arr] = _obj;
+          obj['value']="";
+          // obj = temp;
+          console.log(obj,'2222');
+          return obj;
+        },{test:'12',value:'2222'});
+      </script>
+      <script>
+
+        var obj = {};
+        var tem = [];
+
+        // getAllInfo('a').then(()=>{
+        //   // console.log(tem,'1111111111');
+        //   module.express = tem;
+        // })
+
+        function getAllInfo(key){
+          return new Promise((resolve,reject)=> {
+            getValue(key,(v)=>{
+              resolve(v);
+            });
+          }).then((v)=>{
+            return new Promise((resolve,reject)=>{
+              getChildren(key,(c)=> {
+                tem.push({name:key,'value':v,'children':c});
+                resolve(c);
+              })
+            });
+          })
+          .then((c)=>{
+            return Promise.all(
+              c.map((_c)=>{
+                return getAllInfo(_c);
+              })
+            )
+          });
+        }
+
+        function getValue(key,cb){
+          $.ajax({
+            type:'get',
+            url:'index/'+key+'/getvalue',
+            success:function(res){
+              cb(res);
+            }
+          })
+        }
+        function getChildren(key,cb){
+          $.ajax({
+            type:'get',
+            url:'index/'+key+'/getchildren',
+            success:function(res){
+              cb(res);
+            }
+          })
+        }
+
+      </script>
+  </body>
+
+</html>
